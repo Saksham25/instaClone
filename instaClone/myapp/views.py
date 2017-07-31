@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from forms import SignUpForm, LoginForm, PostForm, LikeForm, CommentForm, UpvoteForm
 from models import UserModel, SessionToken, PostModel, LikeModel, CommentModel
 from django.contrib.auth.hashers import make_password, check_password
-from Insta_clone.settings import BASE_DIR
+from instaClone.settings import BASE_DIR
 from imgurpython import ImgurClient
 from datetime import timedelta
 from django.utils import timezone
@@ -153,7 +153,7 @@ def logout_view(request):
         latest_sessn = SessionToken.objects.filter(user=user).last()
         if latest_sessn:
             latest_sessn.delete()
-            return redirect("/login/")
+            return redirect("/signup/")
             # how to get cookies in python to delete cookie n session
 
 

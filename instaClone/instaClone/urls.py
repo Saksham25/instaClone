@@ -1,3 +1,4 @@
+
 from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
@@ -11,5 +12,5 @@ urlpatterns = [
     url('like/', like_view),
     url('logout/', logout_view),
     url('upvote/', upvote_view),
-    url('', signup_view)
+    url('signup/', signup_view)
 ]
