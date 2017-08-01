@@ -9,9 +9,40 @@
     background-size: cover;
     background-position: center;
     color: black;
+    background-image:url("https://4.bp.blogspot.com/-BS3sBCWg4R4/VWYAEX7bNHI/AAAAAAABjLs/dmoev74xbmI/s0/Coding_with_Style-2_uhd.jpg");
+    background-repeat:no-repeat;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     }
+    input[type="submit"]
+    {
+    width:15em;
+    height:2.5em;
+    color:white;
+    background:orange;
+    border-radius:8px;
+    font-size:15px;
+    }
+    input[type="text"]
+    {
+    padding:6px 10px;
+    margin:8px 0;
+    box-sizing:border-box;
+    }
+    input[type="text"]
+    {
+    padding:6px 10px;
+    margin:8px 0;
+    box-sizing:border-box;
+    }
+    label
+    {
+    display:inline-block;
+    clear:left;
+    width:100px;
+    text-align:left;
+    }
+
 
     </style>
 </head>
@@ -62,16 +93,11 @@
             </form>
         </div>
 
+
         <div>
-
-      {% for comment in post.comments %}
-
-        <p>
-          {{ comment.user.username }}
-          {{ comment.created_on }}: {{ comment.comment_text }}
-        </p>
-
-          <form method="POST" action="/upvote/">
+            {% for comment in post.comments %}
+                <p><b>{{ comment.user.username }} [{{ comment.created_on }}]:</b> {{ comment.comment_text }}</p>
+                   <form method="POST" action="/upvote/">
               {% csrf_token %}
 
               <input type="hidden" name="id" value="{{ comment.id }}">
@@ -80,9 +106,9 @@
 
           </form><span>Upvotes: {{comment.upvote_num}}</span>
 
-      {% endfor %}
+            {% endfor %}
+        </div>
 
-      </div>
 
     {% endfor %}
 </body>

@@ -7,6 +7,7 @@ from instaClone.settings import BASE_DIR
 from imgurpython import ImgurClient
 from datetime import timedelta
 from django.utils import timezone
+import requests
 
 
 def signup_view(request):
@@ -92,6 +93,7 @@ def feed_view(request):
     else:
         return redirect('/login/')
 
+
 def post_view(request):
     user = check_validation(request)
 
@@ -106,7 +108,7 @@ def post_view(request):
 
                 path = str(BASE_DIR + "\\" + post.image.url)
 
-                client = ImgurClient('3885ef5f1212538', 'b607a83fb4e5d62d3e936075755e3a40eccc7326')
+                client = ImgurClient('b05a87fc2d9b16a', 'e40bae7fc06026074022bcac6b4f370fe4963cba')
                 post.image_url = client.upload_from_path(path,anon=True)['link']
                 post.save()
 
@@ -125,9 +127,20 @@ def comment_view(request):
         form = CommentForm(request.POST)
         if form.is_valid():
             post_id = form.cleaned_data.get('post').id
+            print post_id
             comment_text = form.cleaned_data.get('comment_text')
             comment = CommentModel.objects.create(user=user, post_id=post_id, comment_text=comment_text)
             comment.save()
+
+            apikey = '39JDDYmgIv5c1FPr54X0ozcQ6L8nnk29DejqgZ2h7aY'
+            request_url =('https://apis.paralleldots.com/sentiment?sentence1=%s&apikey=%s') % (comment_text, apikey)
+            print 'POST request url : %s' % (request_url)
+            sentiment = requests.get(request_url, verify=False).json()
+            sentiment_value = sentiment['sentiment']
+            print sentiment_value
+            if (sentiment_value < 0.6 and max(value_list) > 0.7):
+                print 'dirty image'
+
             return redirect('/feed/')
         else:
             return redirect('/feed/')
@@ -147,14 +160,13 @@ def check_validation(request):
 
 def logout_view(request):
 
-    user = check_validation(request)
+        user = check_validation(request)
 
-    if user is not None:
-        latest_sessn = SessionToken.objects.filter(user=user).last()
-        if latest_sessn:
-            latest_sessn.delete()
-            return redirect("/signup/")
-            # how to get cookies in python to delete cookie n session
+        if user is not None:
+            latest_sessn = SessionToken.objects.filter(user=user).last()
+            if latest_sessn:
+                latest_sessn.delete()
+                return redirect("/login/")
 
 
 # method to create upvote for comments
@@ -183,6 +195,6 @@ def upvote_view(request):
                 print ('stupid mistake')
                 #liked_msg = 'Unliked!'
 
-        return redirect('/Feed/')
+        return redirect('/feed/')
     else:
-        return redirect('/Feed/')
+        return redirect('/feed/')
