@@ -47,31 +47,32 @@
     </style>
 </head>
 <body>
-    <div style="float: right; padding: 20px;  ">
-        <form action="/logout/" method="POST">
-            {% csrf_token %}
-             <input type="submit" class="btn btn-default" value="Logout">
-        </form>
-    </div>
+<form method="POST"  action="/post/">
+        {% csrf_token%}
 
-    <form method="post" action="/post/">
-        {% csrf_token %}
-        <input type="submit" class="btn-default btn" value="Create Post">
-    </form>
+        <input type="submit" class="btn btn-default" value="create a post">
 
+</form>
 
-    {% for post in posts %}
+<form method="POST"  action="/logout/">
+        {% csrf_token%}
 
+        <input type="submit" class="btn btn-default" value="Logout">
+</form>
+<h1>Feeds</h1>
+{% for post in posts %}
 
-        <h3> Posted by: {{ post.user.username }} </h3>
-        <p>[{{ post.created_on }}]</p>
-        <img style="display:inline-block; width:350px; height:300px;"
+<h3>
+    Posted by : {{post.user.username}}
+</h3>
+ <p>[{{ post.created_on }}]</p>
+<img style="display:inline-block; width:350px; height:300px;"
              src="{{ post.image_url }}" /><br>
         <span  style="display:inline-block;">{{ post.caption }}</span><br/><br/>
         <div style="display:inline-block">
             {{ post.like_count }} likes this
         </div>
-        <div style="display:inline-block">
+<div style="display:inline-block">
             <form method="POST" action="/like/">
               {% csrf_token %}
               <input type="hidden" name="post" value="{{ post.id }}" />
@@ -93,11 +94,11 @@
             </form>
         </div>
 
-
         <div>
             {% for comment in post.comments %}
                 <p><b>{{ comment.user.username }} [{{ comment.created_on }}]:</b> {{ comment.comment_text }}</p>
-                   <form method="POST" action="/upvote/">
+
+              <form method="POST" action="/upvote/">
               {% csrf_token %}
 
               <input type="hidden" name="id" value="{{ comment.id }}">
@@ -106,10 +107,13 @@
 
           </form><span>Upvotes: {{comment.upvote_num}}</span>
 
-            {% endfor %}
-        </div>
+      {% endfor %}
+
+      </div>
+</div>
+ <hr />
+  {% endfor %}
 
 
-    {% endfor %}
 </body>
 </html>
